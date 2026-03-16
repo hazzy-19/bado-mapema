@@ -1,5 +1,13 @@
 import { sections, petStates, workflows, disciplineRules, envVars } from "../data/constants";
 import ArchitectureGraph from "../components/ArchitectureGraph";
+import * as LucideIcons from "lucide-react";
+
+const renderIcon = (name: string | undefined, className?: string) => {
+    if (!name) return null;
+    const Icon = (LucideIcons as any)[name];
+    if (!Icon) return null;
+    return <Icon className={className} />;
+};
 
 interface DashboardContentProps {
     activeSection: string;
@@ -13,47 +21,52 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
     const section = sections.find((s) => s.id === activeSection);
     
     return (
-        <div style={{ flex: 1, padding: "36px 44px", overflow: "auto" }}>
+        <div className="flex-1 overflow-auto relative z-10 scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="max-w-7xl mx-auto py-12 px-8 md:px-14 lg:px-24">
             {/* Section title */}
             {section && (
-                <div style={{ marginBottom: 28 }}>
-                    <h1 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 26, fontWeight: 400, color: "#1a1a1a" }}>
-                        {section.icon} {section.label}
+                <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
+                        <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner flex items-center justify-center">
+                            {renderIcon(section.icon, "w-7 h-7 text-white")}
+                        </span> 
+                        {section.label}
                     </h1>
-                    <div style={{ marginTop: 10, height: 3, width: 40, background: section.color, borderRadius: 2 }} />
+                    <div className="mt-4 h-[4px] w-16 rounded-full transition-all duration-500" style={{ background: section.color, boxShadow: `0 0 16px ${section.color}` }} />
                 </div>
             )}
 
             {/* Cards grid */}
             {section && (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(310px, 1fr))", gap: 14 }}>
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
                     {section.items.map((item, idx) => {
                         const key = `${section.id}-${idx}`;
                         const open = expandedItem === key;
                         return (
-                            <div key={key} className="hover-card" onClick={() => setExpandedItem(open ? null : key)} style={{
-                                background: "#fff", border: `1px solid ${open ? section.color : "#e5ddd3"}`,
-                                borderRadius: 8, padding: "18px 20px", cursor: "pointer",
-                                transition: "border-color 0.15s, background 0.15s",
-                            }}>
-                                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <div key={key} 
+                                className={`rounded-2xl p-6 cursor-pointer transition-all duration-300 group backdrop-blur-xl border ${open ? 'bg-slate-800/80 scale-[1.02] shadow-[0_12px_40px_rgba(0,0,0,0.4)]' : 'bg-slate-900/40 hover:bg-slate-800/60 hover:scale-[1.01] shadow-[0_8px_32px_rgba(0,0,0,0.2)]'}`} 
+                                onClick={() => setExpandedItem(open ? null : key)} 
+                                style={{
+                                    borderColor: open ? section.color : "rgba(255,255,255,0.08)",
+                                    boxShadow: open ? `0 8px 32px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1), 0 0 20px ${section.color}33` : 'inset 0 1px 1px rgba(255,255,255,0.05)'
+                                }}>
+                                <div className="flex justify-between items-start">
                                     <div>
-                                        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: section.color }}>{item.title}</div>
-                                        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#aaa", marginTop: 3, fontStyle: "italic" }}>{item.file}</div>
+                                        <div className="font-sans text-base font-bold tracking-wide" style={{ color: section.color, textShadow: `0 0 10px ${section.color}66` }}>{item.title}</div>
+                                        <div className="font-mono text-xs text-slate-400 mt-1 italic">{item.file}</div>
                                     </div>
-                                    <span style={{ fontFamily: "'DM Sans', sans-serif", color: "#ccc", fontSize: 11, marginTop: 2 }}>{open ? "▲" : "▼"}</span>
+                                    <div className={`flex items-center justify-center w-6 h-6 rounded-full bg-white/5 text-slate-400 text-[10px] transition-transform duration-300 ${open ? 'rotate-180 bg-white/10 text-white' : ''}`}>
+                                        ▼
+                                    </div>
                                 </div>
                                 {open && (
-                                    <div style={{ marginTop: 14, borderTop: "1px solid #f0e8e0", paddingTop: 12 }}>
+                                    <div className="mt-5 border-t border-white/10 pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                         {item.fields.map((f: any) => (
-                                            <div key={f.name} className="field-row" style={{
-                                                display: "flex", justifyContent: "space-between", alignItems: "flex-start",
-                                                padding: "5px 6px", borderRadius: 4, marginBottom: 2, gap: 12,
-                                            }}>
-                                                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: "#333", whiteSpace: "nowrap" }}>{f.name}</span>
-                                                <div style={{ textAlign: "right", flexShrink: 0 }}>
-                                                    <div style={{ fontFamily: "monospace", fontSize: 11, color: section.color }}>{f.type}</div>
-                                                    {f.note && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#aaa", fontStyle: "italic" }}>{f.note}</div>}
+                                            <div key={f.name} className="flex justify-between items-start p-2 rounded-lg mb-1 gap-4 transition-colors hover:bg-white/5 group/field">
+                                                <span className="font-mono text-[13px] font-medium text-slate-200 whitespace-nowrap group-hover/field:text-white transition-colors">{f.name}</span>
+                                                <div className="text-right shrink-0">
+                                                    <div className="font-mono text-xs font-semibold tracking-wide" style={{ color: section.color }}>{f.type}</div>
+                                                    {f.note && <div className="font-sans text-[11px] text-slate-400 italic mt-0.5">{f.note}</div>}
                                                 </div>
                                             </div>
                                         ))}
@@ -67,39 +80,47 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
 
             {/* Pet State Machine */}
             {activeSection === "pet" && (
-                <div>
-                    <div style={{ marginBottom: 28 }}>
-                        <h1 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 26, fontWeight: 400 }}>🐾 Pet State Machine</h1>
-                        <div style={{ marginTop: 10, height: 3, width: 40, background: "#0f766e", borderRadius: 2 }} />
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <div className="mb-10">
+                        <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
+                            <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner">
+                                <LucideIcons.Activity className="w-7 h-7 text-emerald-400" />
+                            </span> Pet State Machine
+                        </h1>
+                        <div className="mt-4 h-[4px] w-16 bg-emerald-500 rounded-full shadow-[0_0_16px_rgba(16,185,129,0.8)]" />
                     </div>
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#666", lineHeight: 1.7, maxWidth: 560, marginBottom: 28 }}>
+                    <p className="font-sans text-[15px] text-slate-400 leading-relaxed max-w-[600px] mb-10">
                         The digital pet is the emotional engine of Bado Mapema. It degrades each day a save is missed, and recovers instantly on a confirmed M-Pesa payment.
                     </p>
-                    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
+                    <div className="flex gap-4 flex-wrap mb-10">
                         {petStates.map((p, i) => (
-                            <div key={p.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                <div style={{
-                                    background: p.bg, border: `1px solid ${p.border}`,
-                                    borderRadius: 8, padding: "18px 22px", textAlign: "center", minWidth: 130,
+                            <div key={p.label} className="flex items-center gap-3">
+                                <div className="rounded-2xl p-5 text-center min-w-[140px] backdrop-blur-md relative overflow-hidden group" style={{
+                                    background: `linear-gradient(135deg, ${p.bg}11, ${p.bg}33)`, 
+                                    border: `1px solid ${p.color}44`,
+                                    boxShadow: `0 8px 32px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.05), 0 0 20px ${p.color}22`
                                 }}>
-                                    <div style={{ fontSize: 26, marginBottom: 8, color: p.color }}>{p.icon}</div>
-                                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: p.color }}>{p.label}</div>
-                                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: p.color, marginTop: 4, opacity: 0.8 }}>{p.days}</div>
-                                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#888", marginTop: 5, fontStyle: "italic" }}>{p.desc}</div>
+                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(circle at center, ${p.color}33 0%, transparent 70%)` }} />
+                                    <div className="mb-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] filter transition-transform group-hover:scale-110 duration-300 flex justify-center">
+                                        {renderIcon(p.icon, "w-10 h-10")}
+                                    </div>
+                                    <div className="font-sans text-sm font-bold tracking-wide" style={{ color: p.color, textShadow: `0 0 10px ${p.color}66` }}>{p.label}</div>
+                                    <div className="font-mono text-[11px] mt-1.5 opacity-90 font-medium" style={{ color: p.color }}>{p.days}</div>
+                                    <div className="font-sans text-[11px] text-slate-400 mt-2 italic">{p.desc}</div>
                                 </div>
                                 {i < petStates.length - 1 && (
-                                    <div style={{ textAlign: "center" }}>
-                                        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#1e293b" }}>miss</div>
-                                        <div style={{ color: "#1e293b", fontSize: 18, margin: "2px 0" }}>→</div>
-                                        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#0f766e" }}>save ↩</div>
+                                    <div className="text-center px-1">
+                                        <div className="font-mono text-[10px] text-slate-500 font-semibold uppercase tracking-wider">miss</div>
+                                        <div className="text-slate-500 text-xl my-0.5">→</div>
+                                        <div className="font-mono text-[10px] text-emerald-400 font-semibold uppercase tracking-wider">save ↩</div>
                                     </div>
                                 )}
                             </div>
                         ))}
                     </div>
-                    <div style={{ background: "#fff", border: "1px solid #e5ddd3", borderRadius: 8, padding: "14px 20px", maxWidth: 600 }}>
-                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#555" }}>
-                            <strong style={{ color: "#1B6B3A" }}>Recovery:</strong> Any <code style={{ background: "#f5f0e8", padding: "1px 5px", borderRadius: 3, fontSize: 12 }}>ResultCode === 0</code> from the Daraja callback immediately sets pet status to <strong>Healthy</strong> and resets <code style={{ background: "#f5f0e8", padding: "1px 5px", borderRadius: 3, fontSize: 12 }}>missedDaysCount</code> to 0.
+                    <div className="bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-5 max-w-[640px] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+                        <span className="font-sans text-[14px] text-slate-300 leading-relaxed">
+                            <strong className="text-emerald-400 mr-2 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]">Recovery:</strong> Any <code className="bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-cyan-300 font-mono text-[13px] mx-1 shadow-inner">ResultCode === 0</code> from the Daraja callback immediately sets pet status to <strong className="text-white mx-1">Healthy</strong> and resets <code className="bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-cyan-300 font-mono text-[13px] mx-1 shadow-inner">missedDaysCount</code> to 0.
                         </span>
                     </div>
                 </div>
@@ -107,60 +128,55 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
 
             {/* Architecture Graph */}
             {activeSection === "graph" && (
-                <div>
-                     <div style={{ marginBottom: 28 }}>
-                        <h1 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 26, fontWeight: 400 }}>🗺️ Architecture Map</h1>
-                        <div style={{ marginTop: 10, height: 3, width: 40, background: "#C8472A", borderRadius: 2 }} />
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                     <div className="mb-10">
+                        <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
+                            <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner">
+                                <LucideIcons.Map className="w-7 h-7 text-orange-400" />
+                            </span> Architecture Map
+                        </h1>
+                        <div className="mt-4 h-[4px] w-16 bg-orange-500 rounded-full shadow-[0_0_16px_rgba(249,115,22,0.8)]" />
                     </div>
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#666", lineHeight: 1.7, maxWidth: 560, marginBottom: 28 }}>
+                    <p className="font-sans text-[15px] text-slate-400 leading-relaxed max-w-[600px] mb-10">
                         Interactive visualization of the core models, back-end APIs, behavioral logic vectors, and communication logic that power Bado Mapema's savings loop.
                     </p>
-                    <ArchitectureGraph />
+                    <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.2)] overflow-hidden p-2">
+                        <ArchitectureGraph />
+                    </div>
                 </div>
             )}
 
             {/* Workflows */}
             {activeSection === "workflow" && (
-                <div>
-                    <div style={{ marginBottom: 28 }}>
-                        <h1 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 26, fontWeight: 400 }}>⟶ Workflows</h1>
-                        <div style={{ marginTop: 10, height: 3, width: 40, background: "#0f766e", borderRadius: 2 }} />
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <div className="mb-10">
+                        <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
+                            <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner">
+                                <LucideIcons.GitMerge className="w-7 h-7 text-cyan-400" />
+                            </span> Workflows
+                        </h1>
+                        <div className="mt-4 h-[4px] w-16 bg-cyan-500 rounded-full shadow-[0_0_16px_rgba(6,182,212,0.8)]" />
                     </div>
-                    <div style={{ display: "flex", gap: 8, marginBottom: 28 }}>
+                    <div className="flex gap-3 mb-10 overflow-x-auto pb-2 scrollbar-none">
                         {workflows.map(w => (
-                            <button key={w.id} onClick={() => setActiveWorkflow(w.id)} style={{
-                                padding: "8px 22px", borderRadius: 4,
-                                background: activeWorkflow === w.id ? "#0f766e" : "#fff",
-                                border: `1px solid ${activeWorkflow === w.id ? "#0f766e" : "#e5ddd3"}`,
-                                color: activeWorkflow === w.id ? "#fff" : "#444",
-                                fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500, cursor: "pointer",
-                                transition: "all 0.15s",
-                            }}>{w.label}</button>
+                            <button key={w.id} onClick={() => setActiveWorkflow(w.id)} className={`py-2.5 px-6 rounded-xl border border-white/10 font-sans text-sm font-semibold cursor-pointer transition-all duration-300 whitespace-nowrap ${activeWorkflow === w.id ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.3)]' : 'bg-slate-900/40 text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}>
+                                {w.label}
+                            </button>
                         ))}
                     </div>
                     {workflows.filter(w => w.id === activeWorkflow).map(w => (
-                        <div key={w.id} style={{ maxWidth: 500 }}>
+                        <div key={w.id} className="max-w-[600px] relative">
                             {w.steps.map((step, i) => (
-                                <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start", marginBottom: 14 }}>
-                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
-                                        <div style={{
-                                            width: 30, height: 30, borderRadius: "50%",
-                                            display: "flex", alignItems: "center", justifyContent: "center",
-                                            fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
-                                            background: step.type === "success" ? "#1B6B3A" : step.type === "failure" ? "#C8472A" : step.type === "decision" ? "#8B4513" : "#fff",
-                                            border: `2px solid ${step.type === "success" ? "#1B6B3A" : step.type === "failure" ? "#C8472A" : step.type === "decision" ? "#8B4513" : "#e5ddd3"}`,
-                                            color: ["success", "failure", "decision"].includes(step.type) ? "#fff" : "#aaa",
-                                        }}>{i + 1}</div>
-                                        {i < w.steps.length - 1 && <div style={{ width: 1, height: 20, marginTop: 4, background: "#e5ddd3" }} />}
+                                <div key={i} className="flex gap-5 items-start mb-5 relative group">
+                                    <div className="flex flex-col items-center shrink-0">
+                                        <div className={`w-9 h-9 rounded-full flex items-center justify-center font-mono text-sm font-bold border-2 transition-transform group-hover:scale-110 duration-300 z-10 ${step.type === "success" ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.4)]" : step.type === "failure" ? "bg-rose-500/20 border-rose-500/50 text-rose-400 shadow-[0_0_15px_rgba(225,29,72,0.4)]" : step.type === "decision" ? "bg-amber-500/20 border-amber-500/50 text-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.4)]" : "bg-slate-800 border-white/20 text-slate-300"}`}>
+                                            {i + 1}
+                                        </div>
+                                        {i < w.steps.length - 1 && <div className="absolute top-9 bottom-[-20px] left-1/2 w-[2px] -ml-[1px] bg-gradient-to-b from-white/20 to-transparent z-0" />}
                                     </div>
-                                    <div className="wf-step" style={{
-                                        flex: 1, background: "#fff", border: "1px solid #e5ddd3",
-                                        borderRadius: 6, padding: "9px 14px", marginBottom: 0,
-                                        fontFamily: "'DM Sans', sans-serif", fontSize: 13,
-                                        color: step.type === "success" ? "#1B6B3A" : step.type === "failure" ? "#C8472A" : step.type === "decision" ? "#8B4513" : "#333",
-                                        fontWeight: step.type === "decision" ? 600 : 400,
-                                        borderColor: step.type === "success" ? "#a8d5b5" : step.type === "failure" ? "#f5b8ae" : "#e5ddd3",
-                                    }}>{step.text}</div>
+                                    <div className={`flex-1 backdrop-blur-md rounded-xl p-4 font-sans text-[14px] leading-relaxed transition-all duration-300 border shadow-lg ${step.type === 'success' ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-100 group-hover:bg-emerald-500/10' : step.type === 'failure' ? 'bg-rose-500/5 border-rose-500/20 text-rose-100 group-hover:bg-rose-500/10' : step.type === 'decision' ? 'bg-amber-500/5 border-amber-500/20 text-amber-100 font-medium group-hover:bg-amber-500/10' : 'bg-slate-900/40 border-white/10 text-slate-300 group-hover:bg-white/5'}`}>
+                                        {step.text}
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -170,51 +186,38 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
 
             {/* Env vars */}
             {activeSection === "env" && (
-                <div>
-                    <div style={{ marginBottom: 28 }}>
-                        <h1 style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 26, fontWeight: 400 }}>🔑 Environment Variables</h1>
-                        <div style={{ marginTop: 10, height: 3, width: 40, background: "#0f766e", borderRadius: 2 }} />
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <div className="mb-10">
+                        <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
+                            <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner">
+                                <LucideIcons.Key className="w-7 h-7 text-amethyst-400" color="#a855f7" />
+                            </span> Environment Variables
+                        </h1>
+                        <div className="mt-4 h-[4px] w-16 bg-amethyst-500 rounded-full shadow-[0_0_16px_rgba(168,85,247,0.8)]" style={{ backgroundColor: '#a855f7' }} />
                     </div>
-                    <div style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "flex-start" }}>
-                        <div style={{ background: "#fff", border: "1px solid #e5ddd3", borderRadius: 8, overflow: "hidden", minWidth: 360 }}>
+                    <div className="flex gap-8 flex-wrap items-start">
+                        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden min-w-[380px] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
                             {envVars.map((v, i) => (
-                                <div key={v.key} style={{
-                                    display: "flex", justifyContent: "space-between", alignItems: "center",
-                                    padding: "11px 20px",
-                                    borderBottom: i < envVars.length - 1 ? "1px solid #f0e8e0" : "none",
-                                    background: i % 2 === 0 ? "#fff" : "#fdfaf7",
-                                }}>
+                                <div key={v.key} className={`flex justify-between items-center p-4 transition-colors hover:bg-white/5 ${i < envVars.length - 1 ? 'border-b border-white/5' : ''}`}>
                                     <div>
-                                        <code style={{ fontFamily: "monospace", fontSize: 12, color: "#1a1a1a" }}>{v.key}</code>
-                                        {v.note && <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#aaa", fontStyle: "italic", marginTop: 1 }}>{v.note}</div>}
+                                        <code className="font-mono text-[13px] font-bold text-slate-200 tracking-wide">{v.key}</code>
+                                        {v.note && <div className="font-sans text-[11px] text-slate-500 italic mt-1 max-w-[220px]">{v.note}</div>}
                                     </div>
-                                    <span style={{
-                                        fontFamily: "'DM Sans', sans-serif", fontSize: 10, padding: "2px 8px",
-                                        borderRadius: 10, fontWeight: 500,
-                                        color: v.type === "secret" ? "#9f1239" : "#0f766e",
-                                        background: v.type === "secret" ? "#fff1f2" : "#f0fdf4",
-                                        border: `1px solid ${v.type === "secret" ? "#fecdd3" : "#5eead4"}`,
-                                    }}>{v.type}</span>
+                                    <span className={`font-mono text-[11px] font-bold px-2.5 py-1 rounded-md border ${v.type === 'secret' ? 'text-rose-400 bg-rose-500/10 border-rose-500/30 shadow-[0_0_10px_rgba(225,29,72,0.2)]' : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]'}`}>{v.type.toUpperCase()}</span>
                                 </div>
                             ))}
                         </div>
 
-                        <div style={{ minWidth: 300 }}>
-                            <div style={{ fontFamily: "'DM Serif Display', Georgia, serif", fontSize: 18, fontWeight: 400, marginBottom: 14, color: "#1a1a1a" }}>
+                        <div className="min-w-[340px]">
+                            <div className="font-sans text-lg font-bold mb-4 text-white flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" /> 
                                 Discipline Score Rules
                             </div>
-                            <div style={{ background: "#fff", border: "1px solid #e5ddd3", borderRadius: 8, overflow: "hidden" }}>
+                            <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
                                 {disciplineRules.map((r, i) => (
-                                    <div key={r.event} style={{
-                                        display: "flex", justifyContent: "space-between", alignItems: "center",
-                                        padding: "11px 18px",
-                                        borderBottom: i < disciplineRules.length - 1 ? "1px solid #f0e8e0" : "none",
-                                    }}>
-                                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#444" }}>{r.event}</span>
-                                        <span style={{
-                                            fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
-                                            color: r.positive ? "#0f766e" : "#9f1239",
-                                        }}>{r.delta}</span>
+                                    <div key={r.event} className={`flex justify-between items-center p-4 transition-colors hover:bg-white/5 ${i < disciplineRules.length - 1 ? 'border-b border-white/5' : ''}`}>
+                                        <span className="font-sans text-sm text-slate-300 font-medium">{r.event}</span>
+                                        <span className={`font-mono text-base font-bold drop-shadow-md px-3 py-1 bg-white/5 rounded-lg border border-white/10 ${r.positive ? 'text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]' : 'text-rose-400 shadow-[0_0_10px_rgba(225,29,72,0.1)]'}`}>{r.delta}</span>
                                     </div>
                                 ))}
                             </div>
@@ -222,6 +225,29 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
                     </div>
                 </div>
             )}
+
+            {/* Document Upload Section */}
+            {(activeSection === "workflow" || activeSection === "models") && (
+                <div className="mt-20 pt-10 border-t border-white/10 relative animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <div className="absolute top-[-1px] left-0 w-1/3 h-[1px] bg-gradient-to-r from-cyan-500/50 to-transparent" />
+                    <h2 className="font-sans text-[24px] font-bold text-white mb-2 flex items-center gap-3">
+                        <span className="p-2 rounded-xl bg-white/5 border border-white/10 shadow-inner">
+                            <LucideIcons.Files className="w-5 h-5 text-white" />
+                        </span> 
+                        Shared Documents
+                    </h2>
+                    <p className="font-sans text-[15px] text-slate-400 mb-6">Upload PDFs and assets for your team to access.</p>
+                    
+                    <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center text-center group transition-all duration-300 hover:border-cyan-500/50 hover:bg-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.2)] cursor-pointer">
+                        <div className="w-16 h-16 rounded-full bg-cyan-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <LucideIcons.UploadCloud className="w-8 h-8 text-cyan-400" />
+                        </div>
+                        <h3 className="text-white font-semibold text-lg mb-1">Click to upload or drag & drop</h3>
+                        <p className="text-slate-500 text-sm">PDF, DOCX, or Images (max. 10MB)</p>
+                    </div>
+                </div>
+            )}
+          </div>
         </div>
     );
 }
