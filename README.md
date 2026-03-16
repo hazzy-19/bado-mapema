@@ -1,10 +1,10 @@
 # Bado Mapema
 
-Bado Mapema is a functional architecture and behavioral savings dashboard designed with a premium, glassmorphic dark mode aesthetic. It features an interactive UI with animated metrics, a pet state machine, and data workflows.
+This is a supporting web-app to clearly map out the project's structure and ensure there is total understanding, and allow room for mutual improvements, suggestions, and criticisms are highly advised!.
 
 ## Features
 - **Premium Glassmorphic UI**: Deep slate backgrounds, colorful neon glows, and smooth micro-animations.
-- **Dark/Light Mode**: Integrated theme toggle utilizing smart CSS inversion perfectly preserving all high-contrast accents.
+- **Dark/Light Mode**: Integrated theme toggle utilizing smart CSS inversion, perfectly preserving all high-contrast accents.
 - **Interactive Architecture Graph**: Visualize the core models and logic vectors.
 - **Behavioral Savings State**: Real-time updates for "Pet State Machine" based on saving milestones. 
 
