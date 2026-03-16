@@ -26,7 +26,7 @@ export default function ArchitectureGraph() {
   );
 
   return (
-    <div style={{ width: '100%', height: '800px', background: '#fafafa', border: '1px solid #e5ddd3', borderRadius: '8px' }}>
+    <div className="w-full h-[800px] bg-[#fafafa] border border-[#e5ddd3] rounded-lg">
       <ReactFlow
         nodes={nodes}
         edges={edges}

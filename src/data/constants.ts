@@ -1,6 +1,6 @@
 export const sections = [
     {
-        id: "veto", label: "Veto Protocol & Override", icon: "⚖️", color: "#9f1239",
+        id: "veto", label: "Veto Protocol & Override", icon: "Shield", color: "#9f1239",
         items: [
             {
                 title: "runVetoProtocol()", file: "lib/behavioral.ts", fields: [
@@ -34,57 +34,57 @@ export const sections = [
         ],
     },
     {
-        id: "models", label: "Core Data Models", icon: "⛁", color: "#0f766e",
+        id: "models", label: "Core Data Models", icon: "Database", color: "#0f766e",
         items: [
             {
                 title: "UserProfile", file: "types/index.ts", fields: [
-                    { name: "id", type: "string" },
-                    { name: "phone", type: "string", note: "E.164, e.g. +254712345678" },
-                    { name: "disciplineScore", type: "number", note: "0–100" },
-                    { name: "currentStreak", type: "number", note: "consecutive daily saves" },
-                    { name: "language", type: "Language", note: "'sheng' | 'english'" },
-                    { name: "guardianPhone?", type: "string" },
-                    { name: "guardianName?", type: "string" },
+                    { name: "id", type: "string", note: "UUID representing the core user account." },
+                    { name: "phone", type: "string", note: "E.164 format, strictly used for MPESA." },
+                    { name: "disciplineScore", type: "number", note: "0–100. The behavioral gravity score." },
+                    { name: "currentStreak", type: "number", note: "Continuous daily saves without missing." },
+                    { name: "language", type: "Language", note: "'sheng' | 'english' tone selection." },
+                    { name: "guardianPhone?", type: "string", note: "The emergency contact for Veto Auth." },
+                    { name: "guardianName?", type: "string", note: "Friendly name of the veto guardian." },
                 ]
             },
             {
                 title: "SavingGoal", file: "types/index.ts", fields: [
-                    { name: "targetAmount", type: "number", note: "KES" },
-                    { name: "targetDate", type: "Date" },
-                    { name: "currentBalance", type: "number", note: "KES in escrow" },
-                    { name: "dailySavingsAmount", type: "number", note: "KES/day" },
-                    { name: "priorityLevel", type: "PriorityLevel", note: "1 | 2 | 3" },
-                    { name: "isActive", type: "boolean" },
+                    { name: "targetAmount", type: "number", note: "KES amount the user aims to hit." },
+                    { name: "targetDate", type: "Date", note: "The hard lock-in date for the goal." },
+                    { name: "currentBalance", type: "number", note: "KES held securely in escrow." },
+                    { name: "dailySavingsAmount", type: "number", note: "The daily bite-sized deduction." },
+                    { name: "priorityLevel", type: "PriorityLevel", note: "1 | 2 | 3 to dictate urgency." },
+                    { name: "isActive", type: "boolean", note: "Is the saving loop currently firing?" },
                 ]
             },
             {
                 title: "PetState", file: "types/index.ts", fields: [
                     { name: "status", type: "PetStatus", note: "Healthy → Sick → Critical → Dead" },
-                    { name: "missedDaysCount", type: "number", note: "resets on successful save" },
-                    { name: "lastFedAt", type: "Date | null" },
-                    { name: "name", type: "string", note: "user-assigned" },
+                    { name: "missedDaysCount", type: "number", note: "Tally of M-Pesa failures. Resets fast." },
+                    { name: "lastFedAt", type: "Date | null", note: "Timestamp of last successful STK." },
+                    { name: "name", type: "string", note: "Personalized companion name." },
                 ]
             },
             {
                 title: "EscrowLedgerEntry", file: "types/index.ts", fields: [
-                    { name: "amount", type: "number", note: "+ credit / − debit (KES)" },
-                    { name: "type", type: "TransactionType" },
-                    { name: "mpesaRef?", type: "string", note: "M-Pesa receipt code" },
-                    { name: "description", type: "string" },
+                    { name: "amount", type: "number", note: "+ credit / − debit (in pure KES)" },
+                    { name: "type", type: "TransactionType", note: "Enum classifying the movement." },
+                    { name: "mpesaRef?", type: "string", note: "Safaricom Daraja receipt code." },
+                    { name: "description", type: "string", note: "Human readable transaction log." },
                 ]
             },
             {
                 title: "WithdrawalRequest", file: "types/index.ts", fields: [
-                    { name: "status", type: "WithdrawalStatus" },
-                    { name: "guardianToken?", type: "string", note: "HS256 JWT, 48hr TTL" },
-                    { name: "guardianDecidedAt?", type: "Date" },
-                    { name: "guardianNote?", type: "string" },
+                    { name: "status", type: "WithdrawalStatus", note: "Pending | Approved | Denied | Override" },
+                    { name: "guardianToken?", type: "string", note: "Used in secure external URLs." },
+                    { name: "guardianDecidedAt?", type: "Date", note: "Timestamp of veto outcome." },
+                    { name: "guardianNote?", type: "string", note: "Reasoning from the emergency contact." },
                 ]
             },
         ],
     },
     {
-        id: "api", label: "Server Logic (API)", icon: "⚡", color: "#0369a1",
+        id: "api", label: "Server Logic (API)", icon: "Server", color: "#0369a1",
         items: [
             {
                 title: "GET /api/user/[id]/state", file: "api/routes.ts", fields: [
@@ -139,7 +139,7 @@ export const sections = [
         ],
     },
     {
-        id: "daraja", label: "Daraja Integration", icon: "⌗", color: "#14b8a6",
+        id: "daraja", label: "Daraja Integration", icon: "Link", color: "#14b8a6",
         items: [
             {
                 title: "triggerSTKPush()", file: "lib/daraja.ts", fields: [
@@ -172,7 +172,7 @@ export const sections = [
         ],
     },
     {
-        id: "state", label: "State Handlers", icon: "⧉", color: "#0d9488",
+        id: "state", label: "State Handlers", icon: "Brain", color: "#0d9488",
         items: [
             {
                 title: "BadoMapemaState", file: "context/BadoMapemaContext.tsx", fields: [
@@ -208,7 +208,7 @@ export const sections = [
         ],
     },
     {
-        id: "personality", label: "Messaging Engine", icon: "💬", color: "#475569",
+        id: "personality", label: "Messaging Engine", icon: "MessageSquare", color: "#475569",
         items: [
             {
                 title: "getPersonalityMessage()", file: "lib/personality.ts", fields: [
@@ -230,10 +230,10 @@ export const sections = [
 ];
 
 export const petStates = [
-    { label: "Healthy", color: "#0f766e", bg: "#f0fdf4", border: "#5eead4", icon: "✓", days: "0 days missed", desc: "Saving on track" },
-    { label: "Sick", color: "#b45309", bg: "#fffbeb", border: "#fde68a", icon: "!", days: "1 day missed", desc: "Warning SMS sent" },
-    { label: "Critical", color: "#9f1239", bg: "#fff1f2", border: "#fecdd3", icon: "⚠", days: "2 days missed", desc: "Urgent Sheng alert" },
-    { label: "Dead", color: "#334155", bg: "#f8fafc", border: "#cbd5e1", icon: "✕", days: "3+ days missed", desc: "Streak reset required" },
+    { label: "Healthy", color: "#0f766e", bg: "#f0fdf4", border: "#5eead4", icon: "CheckCircle2", days: "0 days missed", desc: "Saving on track" },
+    { label: "Sick", color: "#b45309", bg: "#fffbeb", border: "#fde68a", icon: "AlertCircle", days: "1 day missed", desc: "Warning SMS sent" },
+    { label: "Critical", color: "#9f1239", bg: "#fff1f2", border: "#fecdd3", icon: "AlertTriangle", days: "2 days missed", desc: "Urgent Sheng alert" },
+    { label: "Dead", color: "#334155", bg: "#f8fafc", border: "#cbd5e1", icon: "XOctagon", days: "3+ days missed", desc: "Streak reset required" },
 ];
 
 export const workflows = [

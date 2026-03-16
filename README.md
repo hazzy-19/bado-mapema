@@ -1,46 +1,50 @@
-# Bado Mapema Functional Architecture
+# Bado Mapema
 
-Bado Mapema is a fictional Kenyan FinTech tool designed for goal-based savings with rigorous behavioral discipline mechanics built directly into the codebase.
-
-This project visualizes the core architecture, data structures, React state management, back-end APIs, and routing logic that power the platform.
+Bado Mapema is a functional architecture and behavioral savings dashboard designed with a premium, glassmorphic dark mode aesthetic. It features an interactive UI with animated metrics, a pet state machine, and data workflows.
 
 ## Features
-
-- **Interactive Architecture Map:** A draggable, zoomable canvas visualizing the flow of logic from User Action (Withdrawal Requests/Saves) to M-Pesa interactions and algorithmic penalties. Built with `@xyflow/react` (React Flow).
-- **Behavioral Logic Visualization:** Documented logic paths for complex behaviors like "The Veto Protocol" (preventing early withdrawals) and the "Burn-The-Bridge" override mechanic.
-- **Data Models:** Clean representation of the database shapes required to run the application (EscrowLedgers, Pet States, User Profiles).
-- **Communication Engine:** Visualizing how SMS logs are processed through an LLM (Gemini) to determine the user's "Burn Rate" and dynamically shift the application's tone from formal English to aggressive Sheng.
+- **Premium Glassmorphic UI**: Deep slate backgrounds, colorful neon glows, and smooth micro-animations.
+- **Dark/Light Mode**: Integrated theme toggle utilizing smart CSS inversion perfectly preserving all high-contrast accents.
+- **Interactive Architecture Graph**: Visualize the core models and logic vectors.
+- **Behavioral Savings State**: Real-time updates for "Pet State Machine" based on saving milestones. 
 
 ## Getting Started
 
-This project is a Next.js 14 application built with React and TypeScript. 
+### 1. Prerequisites
+- Node.js (v18+)
+- npm or yarn
 
-### Prerequisites
+### 2. Environment Variables
 
-Ensure you have Node.js installed on your machine.
+Create a `.env` or `.env.local` file in the root directory (one has been provided for you as `.env.example`). You will need to add your Render backend URL so the frontend can communicate with the server.
 
-### Installation
+```bash
+NEXT_PUBLIC_BACKEND_URL="https://your-backend-instance.onrender.com"
+```
 
-1. Clone the repository.
-2. Install the dependencies:
-   ```bash
-   npm install
-   ```
+### 3. Installation
 
-### Running the Development Server
+Install the dependencies:
 
-Start the local server to view the architecture map in your browser:
+```bash
+npm install
+# or
+yarn install
+```
+
+### 4. Running the Development Server
+
+Start the local server:
 
 ```bash
 npm run dev
+# or
+yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) (or whichever port the terminal specifies) with your browser to see the Dashboard.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-## Built With
-
-- Next.js (App Router)
-- React
-- TypeScript
-- `@xyflow/react` (for the interactive canvas)
-- Vanilla CSS (for styling)
+## Tech Stack
+- Frontend: Next.js (App Router), React, TypeScript
+- Styling: Tailwind CSS v4, Lucide React (Icons)
+- Visualizations: xyflow/react (Architecture Map)
