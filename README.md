@@ -1,8 +1,12 @@
 # Bado Mapema
 
-**Bado Mapema** is a behavioral fintech application and digital companion designed to solve the problem of inconsistent saving habits. Rather than relying on pure willpower, it leverages behavioral economics, social accountability, and artificial intelligence to create a compelling, gamified financial journey.
+This is a supporting web-app to clearly map out the project's structure and ensure there is total understanding, and allow room for mutual improvements, suggestions, and criticisms are highly advised!.
 
-At its core, Bado Mapema transforms the mechanical act of saving money into an emotional and engaging experience.
+## Features
+- **Premium Glassmorphic UI**: Deep slate backgrounds, colorful neon glows, and smooth micro-animations.
+- **Dark/Light Mode**: Integrated theme toggle utilizing smart CSS inversion, perfectly preserving all high-contrast accents.
+- **Interactive Architecture Graph**: Visualize the core models and logic vectors.
+- **Behavioral Savings State**: Real-time updates for "Pet State Machine" based on saving milestones. 
 
 ---
 
