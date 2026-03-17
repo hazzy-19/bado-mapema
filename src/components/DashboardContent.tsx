@@ -1,6 +1,7 @@
 import { sections, petStates, workflows, disciplineRules, envVars } from "../data/constants";
 import ArchitectureGraph from "../components/ArchitectureGraph";
 import * as LucideIcons from "lucide-react";
+import Link from "next/link";
 
 const renderIcon = (name: string | undefined, className?: string) => {
     if (!name) return null;
@@ -25,20 +26,52 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
           <div className="max-w-7xl mx-auto py-12 px-8 md:px-14 lg:px-24">
             {/* Section title */}
             {section && (
-                <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
-                        <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner flex items-center justify-center">
-                            {renderIcon(section.icon, "w-7 h-7 text-white")}
-                        </span> 
-                        {section.label}
-                    </h1>
-                    <div className="mt-4 h-[4px] w-16 rounded-full transition-all duration-500" style={{ background: section.color, boxShadow: `0 0 16px ${section.color}` }} />
+                <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-6">
+                    <div>
+                        <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
+                            <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner flex items-center justify-center">
+                                {renderIcon(section.icon, "w-7 h-7 text-white")}
+                            </span> 
+                            {section.label}
+                        </h1>
+                        <div className="mt-4 h-[4px] w-16 rounded-full transition-all duration-500" style={{ background: section.color, boxShadow: `0 0 16px ${section.color}` }} />
+                    </div>
+                    {section.id === "veto" && (
+                        <Link href="/guardian-docs" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-rose-500/10 text-rose-400 rounded-xl border border-rose-500/30 hover:bg-rose-500/20 transition-all hover:scale-105 shadow-[0_0_15px_rgba(225,29,72,0.15)] font-semibold text-sm group shrink-0">
+                            <LucideIcons.FileText className="w-4 h-4 group-hover:text-white transition-colors" />
+                            <span className="group-hover:text-white transition-colors">Detailed Info</span>
+                        </Link>
+                    )}
+                    {section.id === "daraja" && (
+                        <Link href="/mpesa-docs" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-500/10 text-teal-400 rounded-xl border border-teal-500/30 hover:bg-teal-500/20 transition-all hover:scale-105 shadow-[0_0_15px_rgba(20,184,166,0.15)] font-semibold text-sm group shrink-0">
+                            <LucideIcons.FileText className="w-4 h-4 group-hover:text-white transition-colors" />
+                            <span className="group-hover:text-white transition-colors">Detailed Info</span>
+                        </Link>
+                    )}
+                    {section.id === "personality" && (
+                        <div className="flex gap-2">
+                            <Link href="/sms-docs" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/30 hover:bg-indigo-500/20 transition-all hover:scale-105 shadow-[0_0_15px_rgba(99,102,241,0.15)] font-semibold text-sm group shrink-0">
+                                <LucideIcons.MessageSquare className="w-4 h-4 group-hover:text-white transition-colors" />
+                                <span className="group-hover:text-white transition-colors">SMS Parser Docs</span>
+                            </Link>
+                            <Link href="/personality-docs" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-pink-500/10 text-pink-400 rounded-xl border border-pink-500/30 hover:bg-pink-500/20 transition-all hover:scale-105 shadow-[0_0_15px_rgba(236,72,153,0.15)] font-semibold text-sm group shrink-0">
+                                <LucideIcons.Heart className="w-4 h-4 group-hover:text-white transition-colors" />
+                                <span className="group-hover:text-white transition-colors">Personality Docs</span>
+                            </Link>
+                        </div>
+                    )}
+                    {section.id === "models" && (
+                        <Link href="/escrow-docs" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/20 transition-all hover:scale-105 shadow-[0_0_15px_rgba(16,185,129,0.15)] font-semibold text-sm group shrink-0">
+                            <LucideIcons.Database className="w-4 h-4 group-hover:text-white transition-colors" />
+                            <span className="group-hover:text-white transition-colors">Escrow Ledger Docs</span>
+                        </Link>
+                    )}
                 </div>
             )}
 
             {/* Cards grid */}
             {section && (
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
                     {section.items.map((item, idx) => {
                         const key = `${section.id}-${idx}`;
                         const open = expandedItem === key;
@@ -62,11 +95,11 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
                                 {open && (
                                     <div className="mt-5 border-t border-white/10 pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                         {item.fields.map((f: any) => (
-                                            <div key={f.name} className="flex justify-between items-start p-2 rounded-lg mb-1 gap-4 transition-colors hover:bg-white/5 group/field">
-                                                <span className="font-mono text-[13px] font-medium text-slate-200 whitespace-nowrap group-hover/field:text-white transition-colors">{f.name}</span>
-                                                <div className="text-right shrink-0">
+                                            <div key={f.name} className="flex flex-col sm:flex-row justify-between items-start p-2 rounded-lg mb-2 sm:mb-1 gap-1 sm:gap-4 transition-colors hover:bg-white/5 group/field">
+                                                <span className="font-mono text-[13px] font-medium text-slate-200 break-all sm:break-normal group-hover/field:text-white transition-colors">{f.name}</span>
+                                                <div className="text-left sm:text-right shrink-0">
                                                     <div className="font-mono text-xs font-semibold tracking-wide" style={{ color: section.color }}>{f.type}</div>
-                                                    {f.note && <div className="font-sans text-[11px] text-slate-400 italic mt-0.5">{f.note}</div>}
+                                                    {f.note && <div className="font-sans text-[11px] text-slate-400 italic mt-0.5 whitespace-normal">{f.note}</div>}
                                                 </div>
                                             </div>
                                         ))}
@@ -81,13 +114,19 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
             {/* Pet State Machine */}
             {activeSection === "pet" && (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <div className="mb-10">
-                        <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
-                            <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner">
-                                <LucideIcons.Activity className="w-7 h-7 text-emerald-400" />
-                            </span> Pet State Machine
-                        </h1>
-                        <div className="mt-4 h-[4px] w-16 bg-emerald-500 rounded-full shadow-[0_0_16px_rgba(16,185,129,0.8)]" />
+                    <div className="mb-10 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-6">
+                        <div>
+                            <h1 className="font-sans text-[32px] font-bold text-white tracking-tight flex items-center gap-3 drop-shadow-md">
+                                <span className="p-2.5 rounded-xl bg-white/5 border border-white/10 shadow-inner">
+                                    <LucideIcons.Activity className="w-7 h-7 text-emerald-400" />
+                                </span> Pet State Machine
+                            </h1>
+                            <div className="mt-4 h-[4px] w-16 bg-emerald-500 rounded-full shadow-[0_0_16px_rgba(16,185,129,0.8)]" />
+                        </div>
+                        <Link href="/pet-docs" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/30 hover:bg-emerald-500/20 transition-all hover:scale-105 shadow-[0_0_15px_rgba(16,185,129,0.15)] font-semibold text-sm group shrink-0">
+                            <LucideIcons.FileText className="w-4 h-4 group-hover:text-white transition-colors" />
+                            <span className="group-hover:text-white transition-colors">Detailed Info</span>
+                        </Link>
                     </div>
                     <p className="font-sans text-[15px] text-slate-400 leading-relaxed max-w-[600px] mb-10">
                         The digital pet is the emotional engine of Bado Mapema. It degrades each day a save is missed, and recovers instantly on a confirmed M-Pesa payment.
@@ -196,22 +235,28 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
                         <div className="mt-4 h-[4px] w-16 bg-amethyst-500 rounded-full shadow-[0_0_16px_rgba(168,85,247,0.8)]" style={{ backgroundColor: '#a855f7' }} />
                     </div>
                     <div className="flex gap-8 flex-wrap items-start">
-                        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden min-w-[380px] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+                        <div className="w-full lg:w-auto bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden min-w-0 md:min-w-[380px] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
                             {envVars.map((v, i) => (
                                 <div key={v.key} className={`flex justify-between items-center p-4 transition-colors hover:bg-white/5 ${i < envVars.length - 1 ? 'border-b border-white/5' : ''}`}>
-                                    <div>
-                                        <code className="font-mono text-[13px] font-bold text-slate-200 tracking-wide">{v.key}</code>
+                                    <div className="mr-4">
+                                        <code className="font-mono text-[13px] font-bold text-slate-200 tracking-wide break-all">{v.key}</code>
                                         {v.note && <div className="font-sans text-[11px] text-slate-500 italic mt-1 max-w-[220px]">{v.note}</div>}
                                     </div>
-                                    <span className={`font-mono text-[11px] font-bold px-2.5 py-1 rounded-md border ${v.type === 'secret' ? 'text-rose-400 bg-rose-500/10 border-rose-500/30 shadow-[0_0_10px_rgba(225,29,72,0.2)]' : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]'}`}>{v.type.toUpperCase()}</span>
+                                    <span className={`shrink-0 font-mono text-[11px] font-bold px-2.5 py-1 rounded-md border ${v.type === 'secret' ? 'text-rose-400 bg-rose-500/10 border-rose-500/30 shadow-[0_0_10px_rgba(225,29,72,0.2)]' : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]'}`}>{v.type.toUpperCase()}</span>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="min-w-[340px]">
-                            <div className="font-sans text-lg font-bold mb-4 text-white flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" /> 
-                                Discipline Score Rules
+                        <div className="w-full lg:w-auto min-w-0 md:min-w-[340px]">
+                            <div className="font-sans text-lg font-bold mb-4 text-white flex justify-between items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" /> 
+                                    Discipline Score Rules
+                                </div>
+                                <Link href="/discipline-docs" className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-indigo-500/10 text-indigo-400 rounded-lg border border-indigo-500/30 hover:bg-indigo-500/20 transition-all hover:scale-105 shadow-[0_0_15px_rgba(99,102,241,0.15)] font-semibold text-[11px] group shrink-0">
+                                    <LucideIcons.FileText className="w-3.5 h-3.5 group-hover:text-white transition-colors" />
+                                    <span className="group-hover:text-white transition-colors">Detailed Info</span>
+                                </Link>
                             </div>
                             <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
                                 {disciplineRules.map((r, i) => (
