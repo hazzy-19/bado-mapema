@@ -38,7 +38,7 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
 
             {/* Cards grid */}
             {section && (
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
                     {section.items.map((item, idx) => {
                         const key = `${section.id}-${idx}`;
                         const open = expandedItem === key;
@@ -62,11 +62,11 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
                                 {open && (
                                     <div className="mt-5 border-t border-white/10 pt-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                         {item.fields.map((f: any) => (
-                                            <div key={f.name} className="flex justify-between items-start p-2 rounded-lg mb-1 gap-4 transition-colors hover:bg-white/5 group/field">
-                                                <span className="font-mono text-[13px] font-medium text-slate-200 whitespace-nowrap group-hover/field:text-white transition-colors">{f.name}</span>
-                                                <div className="text-right shrink-0">
+                                            <div key={f.name} className="flex flex-col sm:flex-row justify-between items-start p-2 rounded-lg mb-2 sm:mb-1 gap-1 sm:gap-4 transition-colors hover:bg-white/5 group/field">
+                                                <span className="font-mono text-[13px] font-medium text-slate-200 break-all sm:break-normal group-hover/field:text-white transition-colors">{f.name}</span>
+                                                <div className="text-left sm:text-right shrink-0">
                                                     <div className="font-mono text-xs font-semibold tracking-wide" style={{ color: section.color }}>{f.type}</div>
-                                                    {f.note && <div className="font-sans text-[11px] text-slate-400 italic mt-0.5">{f.note}</div>}
+                                                    {f.note && <div className="font-sans text-[11px] text-slate-400 italic mt-0.5 whitespace-normal">{f.note}</div>}
                                                 </div>
                                             </div>
                                         ))}
@@ -196,19 +196,19 @@ export default function DashboardContent({ activeSection, expandedItem, setExpan
                         <div className="mt-4 h-[4px] w-16 bg-amethyst-500 rounded-full shadow-[0_0_16px_rgba(168,85,247,0.8)]" style={{ backgroundColor: '#a855f7' }} />
                     </div>
                     <div className="flex gap-8 flex-wrap items-start">
-                        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden min-w-[380px] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+                        <div className="w-full lg:w-auto bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden min-w-0 md:min-w-[380px] shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
                             {envVars.map((v, i) => (
                                 <div key={v.key} className={`flex justify-between items-center p-4 transition-colors hover:bg-white/5 ${i < envVars.length - 1 ? 'border-b border-white/5' : ''}`}>
-                                    <div>
-                                        <code className="font-mono text-[13px] font-bold text-slate-200 tracking-wide">{v.key}</code>
+                                    <div className="mr-4">
+                                        <code className="font-mono text-[13px] font-bold text-slate-200 tracking-wide break-all">{v.key}</code>
                                         {v.note && <div className="font-sans text-[11px] text-slate-500 italic mt-1 max-w-[220px]">{v.note}</div>}
                                     </div>
-                                    <span className={`font-mono text-[11px] font-bold px-2.5 py-1 rounded-md border ${v.type === 'secret' ? 'text-rose-400 bg-rose-500/10 border-rose-500/30 shadow-[0_0_10px_rgba(225,29,72,0.2)]' : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]'}`}>{v.type.toUpperCase()}</span>
+                                    <span className={`shrink-0 font-mono text-[11px] font-bold px-2.5 py-1 rounded-md border ${v.type === 'secret' ? 'text-rose-400 bg-rose-500/10 border-rose-500/30 shadow-[0_0_10px_rgba(225,29,72,0.2)]' : 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.2)]'}`}>{v.type.toUpperCase()}</span>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="min-w-[340px]">
+                        <div className="w-full lg:w-auto min-w-0 md:min-w-[340px]">
                             <div className="font-sans text-lg font-bold mb-4 text-white flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" /> 
                                 Discipline Score Rules
